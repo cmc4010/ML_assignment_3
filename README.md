@@ -16,9 +16,9 @@ To create a naive Bayes model to monitor a waste water treatment plant.
 1 target feature
 
 descriptive features (6, all continuous):
-1. SS-IN, SS-OUT : amount of solids
-2. SED-IN, SED-OUT : amount of sediments
-3. COND-IN, COND-OUT : electrical conductivity
+- SS-IN, SS-OUT : amount of solids
+- SED-IN, SED-OUT : amount of sediments
+- COND-IN, COND-OUT : electrical conductivity
 
 target feature (3 levels):
 1. ok, everything is working correctly
@@ -31,8 +31,7 @@ a. Create a naive Bayes model that uses probability density functions to model t
 
 b. What prediction will the naive Bayes model return for the following query?
 
-	...
-	...
+>SS-IN = 222, SED-IN = 4.5, COND-IN = 1,518, SS-OUT = 74, SED-OUT = 0.25, COND-OUT = 1,642
 
 **NOTE:** "Testing...determine D-1/4/90 to D-30/4/90"
 
