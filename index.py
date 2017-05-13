@@ -1,9 +1,11 @@
 
 # --- Load libraries ---
 import pandas
+import numpy as np
 from lookupTable import lookupGen
 
 # --- Load dataset ---
+print "#### LOAD DATASET ####"
 
 uri = "data/ML_assignment 3_data.txt"
 names = [ # 'Date',
@@ -49,9 +51,9 @@ names = [ # 'Date',
 # 507: ---- testing ----
 dataset = pandas.read_csv(uri, sep=',', skiprows=[0, 506], header=None, names=names)
 
-print(dataset.shape)
+print("Shape of original dataset: ", dataset.shape)
 
-print(dataset)
+# print(dataset)
 
 # LOOKUP TABLE
 
@@ -127,11 +129,11 @@ total = 0
 for myClass in lookupTable:
 	total += len(myClass)
 	# print(len(myClass))
-print(total)
+print("Number of classified dates: ", total)
 
 # 530 lines - 3 lines = 527 lines
+# a total of 527 instances
 
-# X = dataset.values
 # print(X[0])
 # print(dataset.index[0])
 # print(dataset.index[526])
@@ -141,27 +143,57 @@ print(total)
 # for each value in dataset.index[i]
 # check with the class lookup table
 # generate Y[i]
-Y = []
 
-missed = []
-flag = 0
-for x in range(0, 527):
+print "#### DATA CLEANING ####"
+
+X_all = dataset.values
+# Y_all = [] # the target level of the instances
+
+X_train = X_all[:504]
+Y_train = []
+X_testing = X_all[504:]
+
+# remove unclassified from X_train
+missed = [] # idx of unclassified
+flag = 0 # flag of whether or not the entry is classified
+for x in range(0, 504):
 	for y in range(0, 6):
 		if dataset.index[x] in lookupTable[y]:
-			Y.append(y+1)
+			# print(dataset.index[x])
+			Y_train.append(y+1)
 			flag = 1
 			break
 	if flag == 0:
 		missed.append(x)
+		Y_train.append(-1)
 	flag = 0
 
+# convert to np array
+Y_train = np.array(Y_train)
+X_testing = np.array(X_testing) # 23 entries
+
 # some entries are not classified
+# clean them out
+print("Removed values: ", missed)
+X_train = np.delete(X_train, missed, 0)
+Y_train = np.delete(Y_train, missed, 0)
 
-# print(missed)
+print("Size of training data: ", len(X_train))
+print("Size of testing data: ", len(X_testing))
 
-# print(dataset.index[482])
+# ORIGINAL DATASET
+# 0 ~ 503 is training data
+# 504 ~ 526 is testing data
 
-# print(len(Y))
+# we can only use classified data
+# therefore, remove the missing ones
+
+# NEW DATASET
+# 500 training data
+# 23 testing data
+# NOTE: 4 data entries were removed
+
+# --- Process dataset ---
 
 # --- Split-out validation dataset ---
 
