@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 # --- Load dataset ---
 
 uri = "data/ML_assignment 3_basicdata.txt"
-names = ['ID', 'SS-IN', 'SED-IN', 'COND-IN', 'SS-OUT', 'SED-OUT', 'COND-OUT', 'STATUS']
+names = ['SS-IN', 'SED-IN', 'COND-IN', 'SS-OUT', 'SED-OUT', 'COND-OUT', 'STATUS']
 
-dataset = pandas.read_csv(uri, sep=',', names = names)
+dataset = pandas.read_csv(uri, sep=',', index_col = 0, names = names)
 
 # print(dataset)
 
@@ -25,7 +25,18 @@ print(dataset.shape)
 
 description = dataset.describe()
 
-print(description)
+# print(description)
+
+X = dataset.values
+
+X_train = X[:,0:6]
+Y_train = X[:,6:]
+
+# print(X_train)
+# print(Y_train)
+
+targetValueRange = ['ok','settler','solids']
+featureRange = ['SS-IN', 'SED-IN', 'COND-IN', 'SS-OUT', 'SED-OUT', 'COND-OUT']
 
 # dataset.hist()
 # plt.show()
@@ -80,6 +91,45 @@ def exponentialDist( value, lamb ):
 
 # print exponentialDist( 222, "SS-IN")
 
-def basicNaiveBayesModel( query ):
-	# INPUT: query in list format [q1, q2, q3, q4, q5, q6]
-	return 0
+def basicNaiveBayesModel( query, featureList, targetLevels, method ):
+	# query: query values in list format [q1, q2, q3, q4, q5, q6]
+	# featureList: list of all descriptive features
+	# targetLevels: list of possible target levels
+	# method: type of distribution to use
+
+	# multiply the probabilties together
+	# IMPORTANT: the mean and std is calculated from subset of data
+	# that has target that specific target value
+	results = []
+	for target in targetLevels:
+		# get subset based on target level
+		targetSubset = dataset[dataset['STATUS']==target]
+		targetProb = len(targetSubset)/float(len(dataset))
+
+		# PERFORM CALCULATIONS
+		# query -- 6 entries
+		# index 0 ~ 5
+		total = 1
+		for idx in range(0,len(featureList)):
+			feature = featureList[idx]
+			# NORMAL
+			if method == "normal":
+				u = targetSubset.mean(axis=0)[feature]
+				o = targetSubset.std(axis=0)[feature]
+				total *= normalDist( query[idx], u, o )
+			# EXPONENTIAL
+			elif method == "exp":
+				lamb = 1 / dataset.mean(axis=0)[feature]
+				total *= exponentialDist( query[idx], lamb)
+			else:
+				print("Error in choosing distribution")
+		results.append(total*targetProb)
+
+	# FIND THE TARGET LEVEL WITH HIGHEST PROBABILITY
+	print results
+	myMax = max(results)
+	indexMax = results.index(myMax)
+	return targetLevels[indexMax]
+
+myQuery = [222, 4.5, 1518, 74, 0.25, 1642]
+print basicNaiveBayesModel( myQuery, featureRange, targetValueRange, "exp" )
