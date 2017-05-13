@@ -39,3 +39,13 @@ b. What prediction will the naive Bayes model return for the following query?
 
 1. Source code
 2. Report (incl. results, environment, library and language, code explanation and how to use it)
+
+## Problems
+
+### Missing Values
+Simply exclude them from the product of evidence events
+
+### No Match
+"Smoothing involves taking some of the probability mass from the assignments with probability greater than average and spreading it across the probabilities that are below average, or even equal to zero."
+
+Laplace smoothing
