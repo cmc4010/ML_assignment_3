@@ -22,26 +22,16 @@ dataset = pandas.read_csv(uri, sep=',', index_col = 0, names = names)
 # --- Understanding data ---
 
 print(dataset.shape)
+# print(dataset)
 
-print(dataset)
-
-description = dataset.describe()
-
+# description = dataset.describe()
 # print(description)
-
-X = dataset.values
-
-X_train = X[:,0:6]
-Y_train = X[:,6:]
-
-# print(X_train)
-# print(Y_train)
-
-targetValueRange = ['ok','settler','solids']
-featureRange = ['SS-IN', 'SED-IN', 'COND-IN', 'SS-OUT', 'SED-OUT', 'COND-OUT']
 
 # dataset.hist()
 # plt.show()
+
+targetValueRange = ['ok','settler','solids']
+featureRange = ['SS-IN', 'SED-IN', 'COND-IN', 'SS-OUT', 'SED-OUT', 'COND-OUT']
 
 # 13 entries
 # 6 descriptive feature
@@ -99,8 +89,6 @@ def binning( dataset, boundaryList, featureList ):
 	# return 0
 	return pandas.DataFrame(binnedDataset, index=dataset.index.values, columns=dataset.columns.values)
 
-binnedData = binning( dataset, boundaries, featureRange )
-
 # --- Create a naive Bayes model ---
 
 # the model is simple enough to code
@@ -126,7 +114,9 @@ def normalDist( value, u, o ):
 	result = ( 1/( o*(2*math.pi)**(1/2) )) * math.exp(exponent)
 	return result
 
+##### TESTING ZONE #####
 # print normalDist( 222, "SS-IN" )
+########################
 
 # EXPONENTIAL distribution
 # lambda: 1 / mean of the data
@@ -139,7 +129,9 @@ def exponentialDist( value, lamb ):
 	else:
 		return 0
 
+##### TESTING ZONE #####
 # print exponentialDist( 222, "SS-IN")
+########################
 
 def binQuery( query, boundaryList, featureList ):
 	# value: query value
@@ -172,16 +164,18 @@ def basicNaiveBayesModel( data, query, featureList, targetLevels, method, dataty
 	# multiply the probabilities together
 	# IMPORTANT: the mean and std is calculated from subset of data
 	# that has target that specific target value
+	# print data
 	results = []
 	for target in targetLevels:
 		# get subset based on target level
 		targetSubset = data[data['STATUS']==target]
 		targetProb = len(targetSubset)/float(len(data))
+		# print targetSubset
 
 		# BIN QUERY FOR CONTINUOUS DATA
 		if method == "discrete" and datatype == "continuous":
 			query = binQuery( query, boundaryList, featureList )
-			# print binnedQuery
+			# print query
 
 		# PERFORM CALCULATIONS
 		# query -- 6 entries
@@ -208,13 +202,21 @@ def basicNaiveBayesModel( data, query, featureList, targetLevels, method, dataty
 				# PROBLEM: I have to handle "Empty dataframe"
 				# SOLUTION: data smoothing
 
+				# smoothing constant
+				k = 1
 				# subset of values equal to the query value
 				eqVal = targetSubset[targetSubset[feature] == query[idx]]
 				# count of the values equal to the query value
-				freq = len(eqVal)
+				countflt = len(eqVal)
+				countft = len(targetSubset)
+				domain = data[feature].unique()
+				domainSize = len(domain)
+				# print len(domain)
 				# the probability of this query value within the subset
-				relFreq = float(freq)/len(targetSubset)
-				print relFreq
+				normalProb = float(countflt)/len(targetSubset)
+				# probability of this query with smoothing
+				smoothProb = float(countflt + k)/(countft + k * domainSize)
+				total *= smoothProb
 			else:
 				print("Error in choosing distribution")
 		results.append(total*targetProb)
@@ -225,7 +227,9 @@ def basicNaiveBayesModel( data, query, featureList, targetLevels, method, dataty
 	indexMax = results.index(myMax)
 	return targetLevels[indexMax]
 
+##### FINAL RESULTS #####
+binnedData = binning( dataset, boundaries, featureRange )
 myQuery = [222, 4.5, 1518, 74, 0.25, 1642]
 # print basicNaiveBayesModel( dataset, myQuery, featureRange, targetValueRange, "normal" )
 # print basicNaiveBayesModel( dataset, myQuery, featureRange, targetValueRange, "exp" )
-basicNaiveBayesModel( binnedData, myQuery, featureRange, targetValueRange, "discrete", "continuous", boundaries )
+print basicNaiveBayesModel( binnedData, myQuery, featureRange, targetValueRange, "discrete", "continuous", boundaries )
