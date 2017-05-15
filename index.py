@@ -2,6 +2,12 @@
 # --- Load libraries ---
 import pandas
 import numpy as np
+from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
+from sklearn.preprocessing import Imputer
+
+# function for parsing dataset
 from lookupTable import lookupGen
 
 # --- Load dataset ---
@@ -54,6 +60,8 @@ dataset = pandas.read_csv(uri, sep=',', skiprows=[0, 506], header=None, names=na
 print("Shape of original dataset: ", dataset.shape)
 
 # print(dataset)
+
+# --- Process dataset ---
 
 # LOOKUP TABLE
 
@@ -146,6 +154,8 @@ print("Number of classified dates: ", total)
 
 print "#### DATA CLEANING ####"
 
+dataset.replace(to_replace='?', value=np.nan, inplace=True)
+
 X_all = dataset.values
 # Y_all = [] # the target level of the instances
 
@@ -156,7 +166,7 @@ X_testing = X_all[504:]
 # remove unclassified from X_train
 missed = [] # idx of unclassified
 flag = 0 # flag of whether or not the entry is classified
-for x in range(0, 504):
+for x in range(0, len(X_train)):
 	for y in range(0, 6):
 		if dataset.index[x] in lookupTable[y]:
 			# print(dataset.index[x])
@@ -181,6 +191,8 @@ Y_train = np.delete(Y_train, missed, 0)
 print("Size of training data: ", len(X_train))
 print("Size of testing data: ", len(X_testing))
 
+# print X_train
+
 # ORIGINAL DATASET
 # 0 ~ 503 is training data
 # 504 ~ 526 is testing data
@@ -193,11 +205,44 @@ print("Size of testing data: ", len(X_testing))
 # 23 testing data
 # NOTE: 4 data entries were removed
 
-# --- Process dataset ---
+# CHECKPOINT: DATA READY FOR MACHINE LEARNING
 
-# --- Split-out validation dataset ---
+# make sure that '?' gets handled during modeling
+# perform data imputation
+# impute our data to handle missing values
+imp = Imputer(missing_values = 'NaN', strategy='mean', axis=0)
+# impute training data
+impTrain = imp.fit(X_train)
+X_train_imped = impTrain.transform(X_train)
+# impute testing data
+impTesting = imp.fit(X_testing)
+X_testing = impTesting.transform(X_testing)
 
-# --- Test options and evaluation metrics ---
+# --- TRAINING + VALIDATIONS ---
 
-# --- Training + Validation ---
+print "==== Predictions ===="
+
+# GAUSSIAN NB
+model = GaussianNB()
+predictor = model.fit(X_train_imped, Y_train)
+Y_testing = predictor.predict(X_testing)
+print "$$ START OF GaussianNB $$"
+print pandas.DataFrame(Y_testing, index=dataset.index.values[504:], columns=["class"])
+print "== END OF GaussianNB =="
+
+# Multinomial NB
+model = MultinomialNB()
+predictor = model.fit(X_train_imped, Y_train)
+Y_testing = predictor.predict(X_testing)
+print "$$ START OF MultinomialNB $$"
+print pandas.DataFrame(Y_testing, index=dataset.index.values[504:], columns=["class"])
+print "== END OF MultinomialNB ==" 
+
+# Bernoulli NB
+model = BernoulliNB()
+predictor = model.fit(X_train_imped, Y_train)
+Y_testing = predictor.predict(X_testing)
+print "$$ START OF BernoulliNB $$"
+print pandas.DataFrame(Y_testing, index=dataset.index.values[504:], columns=["class"])
+print "== END OF BernoulliNB =="
 
