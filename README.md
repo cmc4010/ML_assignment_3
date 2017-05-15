@@ -1,6 +1,6 @@
 # Machine Learning Assignment 3 Overview
 
-*NOTE:* The contents of the "overview" section is taken from the assignment description.
+**NOTE:** The contents of the "overview" section is taken from the assignment description.
 
 ## Background
 
@@ -48,7 +48,7 @@ b. What prediction will the naive Bayes model return for the following query?
 Language: Python
 Environment: macOS Sierra V10.12.4 (Macbook Pro, 13-inch, 2016)
 
-*NOTE:* There is a line of code in lookupTable.py that did not run on my Windows machine. The code is only tested on macOS.
+**NOTE:** There is a line of code in lookupTable.py that did not run on my Windows machine. The code is only tested on macOS.
 
 Library Descriptions
 Pandas: Powerful Python data analysis toolkit
@@ -90,18 +90,18 @@ The binning boundaries were chosen by eyeing the dataset histogram as well as th
 ## Code Overview
 
 Source codes:
-*lookupTable.py*
-    contains code that parses a string to create an array of values that will be used as a lookup table in *q2.py*
-*nbdFunctions.py*
+**lookupTable.py**
+    contains code that parses a string to create an array of values that will be used as a lookup table in **q2.py**
+**nbdFunctions.py**
     contains code for the custom naïve Bayes model
-*q1.py*
+**q1.py**
     contains code that trains and predicts using basic dataset
-*q2.py*
+**q2.py**
     contains code that trains and predicts using large dataset
 
 ### BASIC DATA OVERVIEW
 
-*Highlight:* Examine dataset to choose appropriate binning boundaries. Once binning is complete, perform Laplace smoothing.
+**Highlight:** Examine dataset to choose appropriate binning boundaries. Once binning is complete, perform Laplace smoothing.
 
 ### LARGE DATA OVERVIEW
 
@@ -114,13 +114,13 @@ Source codes:
 
 ## Results
 
-Source code: *p1.py*
+Source code: **p1.py**
 Models created for small dataset:
 1.	Normal
 2.	Exponential
 3.	Binning + Smoothing
 
-Source code: *p2.py*
+Source code: **p2.py**
 Models created for large dataset:
 1.	Normal
 2.	Exponential
