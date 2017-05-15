@@ -21,7 +21,7 @@ dataset = pandas.read_csv(uri, sep=',', index_col = 0, names = names)
 
 # --- Understanding data ---
 
-print(dataset.shape)
+# print "shape of dataset: ", dataset.shape
 # print(dataset)
 
 # description = dataset.describe()
@@ -222,14 +222,20 @@ def basicNaiveBayesModel( data, query, featureList, targetLevels, method, dataty
 		results.append(total*targetProb)
 
 	# FIND THE TARGET LEVEL WITH HIGHEST PROBABILITY
-	print results
+	# print results
 	myMax = max(results)
 	indexMax = results.index(myMax)
 	return targetLevels[indexMax]
 
 ##### FINAL RESULTS #####
+
 binnedData = binning( dataset, boundaries, featureRange )
 myQuery = [222, 4.5, 1518, 74, 0.25, 1642]
-# print basicNaiveBayesModel( dataset, myQuery, featureRange, targetValueRange, "normal" )
-# print basicNaiveBayesModel( dataset, myQuery, featureRange, targetValueRange, "exp" )
-print basicNaiveBayesModel( binnedData, myQuery, featureRange, targetValueRange, "discrete", "continuous", boundaries )
+
+framedQuery = pandas.DataFrame([myQuery], index=["query"], columns=dataset.columns.values[:-1])
+
+print "==== Query ====\n", framedQuery
+print "==== Predictions ===="
+print "Normal: ", basicNaiveBayesModel( dataset, myQuery, featureRange, targetValueRange, "normal" )
+print "Exponential: ", basicNaiveBayesModel( dataset, myQuery, featureRange, targetValueRange, "exp" )
+print "Binning+Smoothing: ", basicNaiveBayesModel( binnedData, myQuery, featureRange, targetValueRange, "discrete", "continuous", boundaries )
