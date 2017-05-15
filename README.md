@@ -12,8 +12,8 @@ To create a naive Bayes model to monitor a waste water treatment plant.
 
 ## Understanding Data
 
-14 days
-6 descriptive features
+14 days  
+6 descriptive features  
 1 target feature
 
 descriptive features (6, all continuous):
@@ -45,26 +45,26 @@ b. What prediction will the naive Bayes model return for the following query?
 
 ## Environment and Library
 
-Language: Python
+Language: Python  
 Environment: macOS Sierra V10.12.4 (Macbook Pro, 13-inch, 2016)
 
 **NOTE:** There is a line of code in lookupTable.py that did not run on my Windows machine. The code is only tested on macOS.
 
-Library Descriptions
-Pandas: Powerful Python data analysis toolkit
-SciKit-Learn: Python modules for machine learning and data mining
-Matplotlib: Plotting library for Python
+Library Descriptions  
+Pandas: Powerful Python data analysis toolkit  
+SciKit-Learn: Python modules for machine learning and data mining  
+Matplotlib: Plotting library for Python  
 Numpy: N-dimensional array for numerical computation
 
 ## Naive Bayes Model
 
-Probability Density Functions
-1.	Normal
+Probability Density Functions  
+1.	Normal  
 2.	Exponential
 
-Built-in Models (SciKit-Learn)
-1.	Gaussian
-2.	Multinomial
+Built-in Models (SciKit-Learn)  
+1.	Gaussian  
+2.	Multinomial  
 3.	Bernoulli
 
 ## Problems
@@ -81,7 +81,7 @@ A possible solution is to simply exclude them from the product of evidence event
 The solution I went with was to *impute* the missing values by the mean value of the feature. This may not be a good solution for small datasets. However, with 500 instances of training data, I think it is a viable solution.
 
 ### No Match
-"Smoothing involves taking some of the probability mass from the assignments with probability greater than average and spreading it across the probabilities that are below average, or even equal to zero."
+>Smoothing involves taking some of the probability mass from the assignments with probability greater than average and spreading it across the probabilities that are below average, or even equal to zero.
 
 Laplace smoothing, also called additive smoothing, was used in conjunction with binning. Binning discretizes the continuous features. To solve the issue produced by “no matches”, we perform smoothing on the binned dataset.
 
@@ -89,15 +89,17 @@ The binning boundaries were chosen by eyeing the dataset histogram as well as th
 
 ## Code Overview
 
-Source codes:
 **lookupTable.py**
-    contains code that parses a string to create an array of values that will be used as a lookup table in **q2.py**
+>contains code that parses a string to create an array of values that will be used as a lookup table in **q2.py**
+
 **nbdFunctions.py**
-    contains code for the custom naïve Bayes model
+>contains code for the custom naïve Bayes model 
+
 **q1.py**
-    contains code that trains and predicts using basic dataset
+>contains code that trains and predicts using basic dataset
+
 **q2.py**
-    contains code that trains and predicts using large dataset
+>contains code that trains and predicts using large dataset
 
 ### BASIC DATA OVERVIEW
 
@@ -114,18 +116,18 @@ Source codes:
 
 ## Results
 
-Source code: **p1.py**
-Models created for small dataset:
-1.	Normal
-2.	Exponential
+Source code: **p1.py**  
+Models created for small dataset:  
+1.	Normal  
+2.	Exponential  
 3.	Binning + Smoothing
 
-Source code: **p2.py**
-Models created for large dataset:
-1.	Normal
-2.	Exponential
-3.	Gaussian
-4.	Multinomial
+Source code: **p2.py**  
+Models created for large dataset:  
+1.	Normal  
+2.	Exponential  
+3.	Gaussian  
+4.	Multinomial  
 5.	Bernoulli
 
 ## Conclusion
